@@ -128,25 +128,3 @@ npm test
 Runs unit tests on the `TimeSlot` value object (overlap detection is the
 core domain rule, and it's pure/framework-free, so it's the highest-value
 thing to unit test in this prototype).
-
-## What I'd extend first
-1. **Commit a real migration history** — Docker currently uses `prisma db
-   push` (syncs schema directly, no history) for simplicity. Running
-   `npx prisma migrate dev --name init` locally against a real DB and
-   committing the generated `prisma/migrations/` folder would let Docker use
-   `prisma migrate deploy` instead, which is safer for anything beyond a
-   prototype.
-2. **Overlap check as a DB constraint, not just app logic** — add a Postgres
-   `EXCLUDE` constraint (via `btree_gist`) on `(resourceId, tsrange(startTime,endTime))`
-   so races under concurrent requests can't double-book a resource.
-2. **Refresh tokens** — current JWT is long-lived (7d) with no revocation;
-   add short-lived access tokens + refresh token rotation.
-3. **Pagination & filtering** on `GET /api/resources` and `GET /api/bookings`
-   (by date range, location, status).
-4. **Integration tests with Postman/Newman** hitting a real test DB, plus
-   `supertest` tests against the Express app for the controller layer.
-5. **Real calendar UI** for picking time slots (e.g. a day/week grid) instead
-   of raw datetime inputs — much better UX for spotting free slots.
-6. **Email notifications** on booking confirm/cancel (e.g. via a queued job).
-7. **Soft-delete / audit trail** for resources and bookings instead of hard
-   delete, so history isn't lost.

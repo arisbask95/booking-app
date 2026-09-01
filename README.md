@@ -4,9 +4,8 @@ A prototype booking system (rooms / desks / any bookable resource) built to
 demonstrate DDD-flavoured layered architecture, a REST API with JWT
 auth/roles, and a React frontend.
 
-## Coding Factory assignment checklist
 
-| Απαίτηση | Πού βρίσκεται |
+| Requirements|
 |---|---|
 | Domain Model (DDD) | `backend/prisma/schema.prisma` (User / Resource / Booking) + `backend/src/domain/TimeSlot.js` (value object με το core business rule) |
 | ΒΔ από το μοντέλο | PostgreSQL, δημιουργείται από το Prisma schema (`docker compose up` το κάνει αυτόματα) |

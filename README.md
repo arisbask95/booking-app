@@ -5,7 +5,7 @@ demonstrate DDD-flavoured layered architecture, a REST API with JWT
 auth/roles, and a React frontend.
 
 
-| Requirements|
+ # Requirements
 
 |---|---|
 | Domain Model (DDD) | `backend/prisma/schema.prisma` (User / Resource / Booking) + `backend/src/domain/TimeSlot.js` (value object με το core business rule) |

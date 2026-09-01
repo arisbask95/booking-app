@@ -1,0 +1,66 @@
+generator client {
+  provider      = "prisma-client-js"
+  // "native" covers local dev (Windows/macOS/Linux glibc); the musl target
+  // is what's needed inside the node:20-alpine Docker image.
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+// ---- Domain: User ----
+// A person who can browse resources and make bookings.
+// Admins additionally manage the resource catalog.
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  password  String
+  role      Role      @default(CUSTOMER)
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+}
+
+// ---- Domain: Resource ----
+// The bookable "thing" (a room, a desk, an asset...).
+model Resource {
+  id           String    @id @default(uuid())
+  name         String
+  description  String?
+  location     String?
+  capacity     Int       @default(1)
+  pricePerHour Float     @default(0)
+  bookings     Booking[]
+  createdAt    DateTime  @default(now())
+}
+
+// ---- Domain: Booking ----
+// The aggregate root that ties a User to a Resource for a TimeSlot.
+// Business invariant (enforced in the service layer, not the DB):
+// a Resource cannot have two overlapping PENDING/CONFIRMED bookings.
+model Booking {
+  id         String        @id @default(uuid())
+  user       User          @relation(fields: [userId], references: [id])
+  userId     String
+  resource   Resource      @relation(fields: [resourceId], references: [id])
+  resourceId String
+  startTime  DateTime
+  endTime    DateTime
+  status     BookingStatus @default(CONFIRMED)
+  createdAt  DateTime      @default(now())
+
+  @@index([resourceId, startTime, endTime])
+}

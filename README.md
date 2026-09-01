@@ -5,9 +5,10 @@ demonstrate DDD-flavoured layered architecture, a REST API with JWT
 auth/roles, and a React frontend.
 
 
- # Requirements
+# Requirements
 
-|---|---|
+| Requirement | Implementation |
+|-------------|----------------|
 | Domain Model (DDD) | `backend/prisma/schema.prisma` (User / Resource / Booking) + `backend/src/domain/TimeSlot.js` (value object με το core business rule) |
 | ΒΔ από το μοντέλο | PostgreSQL, δημιουργείται από το Prisma schema (`docker compose up` το κάνει αυτόματα) |
 | Layered architecture (Repository / Service / Controller) | `backend/src/repositories/`, `backend/src/services/`, `backend/src/controllers/`, `backend/src/routes/` |
